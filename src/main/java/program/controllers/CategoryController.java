@@ -27,6 +27,7 @@ public class CategoryController {
     public ResponseEntity<CategoryEntity> create(CategoryCreateDTO dto) {
         CategoryEntity category = new CategoryEntity();
         category.setName(dto.getName());
+        category.setPhotoUrl(dto.getPhotoUrl());
         categoryRepository.save(category);
         return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
@@ -41,13 +42,14 @@ public class CategoryController {
     public ResponseEntity<CategoryEntity> update(@PathVariable("id") Integer categoryId, CategoryUpdateDTO dto) {
         CategoryEntity category = categoryRepository.findById(categoryId).get();
         category.setName(dto.getName());
-        var updateCategoty = categoryRepository.save(category);
-        return new ResponseEntity<>(updateCategoty, HttpStatus.CREATED);
+        category.setPhotoUrl(dto.getPhotoUrl());
+        var updateCategory = categoryRepository.save(category);
+        return new ResponseEntity<>(updateCategory, HttpStatus.CREATED);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> delete(@PathVariable("id") Integer categoryId) {
         categoryRepository.deleteById(categoryId);
-        return new ResponseEntity<>("Categoty Delete", HttpStatus.OK);
+        return new ResponseEntity<>("Category was successful deleted !", HttpStatus.OK);
     }
 }
