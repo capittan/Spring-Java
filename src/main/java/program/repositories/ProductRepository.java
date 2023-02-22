@@ -2,9 +2,9 @@ package program.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import program.entities.CategoryEntity;
+import program.entities.ProductEntity;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<CategoryEntity, Integer> {
+public interface ProductRepository extends JpaRepository<ProductEntity, Integer> {
 
 }
