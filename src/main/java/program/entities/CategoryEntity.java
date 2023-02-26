@@ -14,6 +14,9 @@ public class CategoryEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(length = 4000)
+    private String description;
+
     @Column(nullable = false)
-    private String photoUrl;
+    private String image;
 }
