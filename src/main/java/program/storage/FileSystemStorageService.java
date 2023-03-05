@@ -3,9 +3,11 @@ package program.storage;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,5 +63,46 @@ public class FileSystemStorageService implements StorageService {
         } catch (IOException exception) {
             throw new StorageExceptions("Problem of saving file ", exception);
         }
+    }
+
+    @Override
+    public String saveMultipartFile(MultipartFile file) {
+        try {
+            UUID uuid = UUID.randomUUID();
+            String extension = "jpg";
+            String randomFileName = uuid.toString() + "." + extension;
+            Base64.Decoder decoder = Base64.getDecoder();
+            byte[] bytes = file.getBytes();
+            int[] imageSize = {32, 150, 300, 600, 1200};
+            try (var byteStream = new ByteArrayInputStream(bytes)) {
+                var image = ImageIO.read(byteStream);
+                for (int size : imageSize) {
+                    String fileSaveItem = rootLocation.toString() + "/" + size + "_" + randomFileName;
+                    BufferedImage newImg = ImageUtils.resizeImage(image, extension == "jpg" ?
+                            ImageUtils.IMAGE_JPEG : ImageUtils.IMAGE_PNG, size, size);
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    ImageIO.write(newImg, extension, byteArrayOutputStream);
+                    byte[] newBytes = byteArrayOutputStream.toByteArray();
+                    FileOutputStream out = new FileOutputStream(fileSaveItem);
+                    out.write(newBytes);
+                    out.close();
+                }
+            } catch (IOException exception) {
+                throw new StorageExceptions("Error editing photo");
+            }
+            return randomFileName;
+        } catch (IOException exception) {
+            throw new StorageExceptions("Error of work with file");
+        }
+    }
+
+    @Override
+    public void removeFile(String name) {
+
+    }
+
+    @Override
+    public Path load(String filename) {
+        return null;
     }
 }
