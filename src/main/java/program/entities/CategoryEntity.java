@@ -2,11 +2,12 @@ package program.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import program.dto.category.CategoryItemDTO;
 
 @Data
 @Entity
 @Table(name = "tbl_categories")
-public class CategoryEntity {
+public class CategoryEntity extends CategoryItemDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

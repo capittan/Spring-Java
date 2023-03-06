@@ -9,6 +9,7 @@ import program.dto.category.CategoryCreateDTO;
 import program.dto.category.CategoryItemDTO;
 import program.dto.category.CategoryUpdateDTO;
 import program.entities.CategoryEntity;
+import program.interfaces.CategoryService;
 import program.mapper.CategoryMapper;
 import program.repositories.CategoryRepository;
 import program.storage.StorageService;
@@ -19,45 +20,35 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("api/categories")
 public class CategoryController {
-    private final CategoryRepository categoryRepository;
-    private final CategoryMapper categoryMapper;
-    private final StorageService storageService;
+    private CategoryService categoryService;
 
     @GetMapping
     public ResponseEntity<List<CategoryItemDTO>> index() {
-        var list = categoryRepository.findAll();
-        var model = categoryMapper.CategoryItemsByCategories(list);
+        var model = categoryService.get();
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CategoryEntity> create(@ModelAttribute CategoryCreateDTO dto) {
-        var image = storageService.saveMultipartFile(dto.getFile());
-        CategoryEntity category = categoryMapper.CategoryByCreateCategoryDTO(dto);
-        category.setName(dto.getName());
-        category.setImage(image);
-        categoryRepository.save(category);
-        return new ResponseEntity<>(category, HttpStatus.CREATED);
+    public ResponseEntity<CategoryItemDTO> create(@ModelAttribute CategoryCreateDTO model) {
+        var result = categoryService.create(model);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<CategoryEntity> get(@PathVariable("id") Integer categoryId) {
-        var category = categoryRepository.findById(categoryId);
-        return new ResponseEntity<>(category.get(), HttpStatus.OK);
+    public ResponseEntity<CategoryItemDTO> get(@PathVariable("id") Integer categoryId) {
+        var category = categoryService.get(categoryId);
+        return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<CategoryEntity> update(@PathVariable("id") Integer categoryId, CategoryUpdateDTO dto) {
-        CategoryEntity category = categoryRepository.findById(categoryId).get();
-        category.setName(dto.getName());
-        category.setImage(dto.getPhotoUrl());
-        var updateCategory = categoryRepository.save(category);
-        return new ResponseEntity<>(updateCategory, HttpStatus.CREATED);
+    @PutMapping(value = "{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<CategoryItemDTO> update(@PathVariable("id") Integer categoryId, @ModelAttribute CategoryUpdateDTO model) {
+        var result = categoryService.update(categoryId, model);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> delete(@PathVariable("id") Integer categoryId) {
-        categoryRepository.deleteById(categoryId);
+        categoryService.delete(categoryId);
         return new ResponseEntity<>("Category was successful deleted !", HttpStatus.OK);
     }
 }

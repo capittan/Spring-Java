@@ -98,11 +98,17 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public void removeFile(String name) {
-
+        int[] imageSize = {32, 150, 300, 600, 1200};
+        for (var size : imageSize) {
+            Path path = load(size + "_" + name);
+            File file = new File(path.toString());
+            if (file.delete()) System.out.println("File: " + name + " was deleted !");
+            else System.out.println("File: " + name + " didn't find !");
+        }
     }
 
     @Override
     public Path load(String filename) {
-        return null;
+        return rootLocation.resolve(filename);
     }
 }
