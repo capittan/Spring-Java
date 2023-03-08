@@ -20,7 +20,7 @@ public class FileSystemStorageService implements StorageService {
     private final Path rootLocation;
 
     public FileSystemStorageService(StorageProperties properties) {
-        rootLocation = Paths.get(properties.getLocation());
+        rootLocation = Paths.get(properties.getLocation()); // path, which we indicated ("uploading")
     }
 
     @Override
@@ -50,7 +50,7 @@ public class FileSystemStorageService implements StorageService {
     public String save(String base64) {
         try {
             if (base64.isEmpty())
-                throw new StorageExceptions("Empty file !");
+                throw new StorageExceptions("Empty file !"); // base64 is empty
             UUID uuid = UUID.randomUUID();
             String randomFileName = uuid.toString() + ".jpg";
             String[] charArray = base64.split(",");
@@ -69,11 +69,11 @@ public class FileSystemStorageService implements StorageService {
     public String saveMultipartFile(MultipartFile file) {
         try {
             UUID uuid = UUID.randomUUID();
-            String extension = "jpg";
+            String extension = "jpg";  // we can get extension later
             String randomFileName = uuid.toString() + "." + extension;
             Base64.Decoder decoder = Base64.getDecoder();
-            byte[] bytes = file.getBytes();
-            int[] imageSize = {32, 150, 300, 600, 1200};
+            byte[] bytes = file.getBytes(); // getting bytes from file
+            int[] imageSize = {32, 150, 300, 600, 1200}; // we indicate the dimensions
             try (var byteStream = new ByteArrayInputStream(bytes)) {
                 var image = ImageIO.read(byteStream);
                 for (int size : imageSize) {

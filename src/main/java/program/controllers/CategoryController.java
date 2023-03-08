@@ -8,11 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import program.dto.category.CategoryCreateDTO;
 import program.dto.category.CategoryItemDTO;
 import program.dto.category.CategoryUpdateDTO;
-import program.entities.CategoryEntity;
 import program.interfaces.CategoryService;
-import program.mapper.CategoryMapper;
-import program.repositories.CategoryRepository;
-import program.storage.StorageService;
 
 import java.util.List;
 
