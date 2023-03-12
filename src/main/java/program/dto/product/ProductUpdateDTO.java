@@ -1,19 +1,17 @@
 package program.dto.product;
 
-import jdk.jfr.Category;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class ProductUpdateDTO {
     private String name;
-
+    private double price;
     private String description;
-
-    private String photoUrl;
-
-    private Date dateCreate;
-
-    private Category category;
+    private int category_id;
+    private List<String> removeFiles = new ArrayList<>();
+    private List<MultipartFile> files = new ArrayList<>();
 }

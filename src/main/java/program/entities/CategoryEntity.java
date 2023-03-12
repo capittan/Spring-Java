@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import program.dto.category.CategoryItemDTO;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "tbl_categories")
@@ -20,4 +22,7 @@ public class CategoryEntity extends CategoryItemDTO {
 
     @Column(nullable = false)
     private String image;
+
+    @OneToMany(mappedBy = "category")
+    private List<ProductEntity> products;
 }

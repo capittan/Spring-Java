@@ -6,29 +6,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="tbl_products")
-public class ProductEntity {
+@Table(name="tbl_product_images")
+public class ProductImageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(length = 500, nullable = false)
     private String name;
-    private double price;
-    @Column(length = 4000)
-    private String description;
+    private int priority;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
     private boolean isDelete;
     @ManyToOne
-    @JoinColumn(name="category_id", nullable = false)
-    private CategoryEntity category;
-
-    @OneToMany(mappedBy="product")
-    private List<ProductImageEntity> productImages;
+    @JoinColumn(name="product_id", nullable = false)
+    private ProductEntity product;
 }
